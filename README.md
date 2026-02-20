@@ -4,6 +4,9 @@ A sleek, infinite-canvas scratchpad for notes, folders, labels, images, and voic
 
 Live demo: https://siv-the-programmer.github.io/Clyp-pad/
 
+<img src="pic1.jpg" width="400" alt="addpol">
+
+
 ---
 
 ## Features
@@ -56,6 +59,9 @@ If you want multi-user accounts + cloud sync, you’ll need a backend (see “Fu
 - **Pan:** drag
 - **Zoom:** pinch
 - **Create note:** double-tap (browser dependent)
+
+<img src="pic2.jpg" width="400" alt="addpol">
+
 
 ---
 
