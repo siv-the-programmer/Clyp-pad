@@ -2,7 +2,7 @@
 
 A sleek, infinite-canvas scratchpad for notes, folders, labels, images, and voice notes — built as a single static HTML file.
 
-Live demo: https://siv-the-programmer.github.io/Clyp_pad/
+Live demo: https://siv-the-programmer.github.io/Clyp-pad/
 
 ---
 
