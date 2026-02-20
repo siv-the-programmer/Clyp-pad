@@ -2,8 +2,6 @@
 
 A sleek, infinite-canvas scratchpad for notes, folders, labels, images, and voice notes — built as a single static HTML file.
 
-**Important:** This app stores everything **locally in your browser** using `localStorage`. There is **no server** and **no sync** yet
-
 Live demo: https://siv-the-programmer.github.io/Clyp_pad/
 
 ---
