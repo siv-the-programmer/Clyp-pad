@@ -1006,7 +1006,7 @@ function init(){
   if(!(nod(DB.root).kids||[]).length){
     /* welcome note */
     var nid=uid();
-    DB.nodes[nid]={id:nid,type:'note',name:'Welcome to Clipspace ✦',parent:DB.root,text:'This is your infinite canvas.\n\n'+'→ Scroll or pinch to zoom in and out\n'+'→ Hold Space + drag to pan around\n'+'→ Double-click empty space for a new note\n'+'→ Drag any card anywhere\n'+'→ Right-click a card for options\n'+'→ Click a folder to go inside it\n\nCreate notes, folders, labels, images, and voice notes. Zoom out to see everything at once.',t:ts()};
+    DB.nodes[nid]={id:nid,type:'note',name:'Welcome to ClypPad',parent:DB.root,text:'Made by Sivario\n\n'+'→ Scroll or pinch to zoom in and out\n'+'→ Hold Space + drag to pan around\n'+'→ Double-click empty space for a new note\n'+'→ Drag any card anywhere\n'+'→ Right-click a card for options\n'+'→ Click a folder to go inside it\n\nCreate notes, folders, labels, images, and voice notes. Zoom out to see everything at once.',t:ts()};
     nod(DB.root).kids.push(nid); setPos(DB.root,nid,-110,-80);
 
     /* welcome folder */
