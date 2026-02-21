@@ -1045,7 +1045,7 @@ function init(){
   if(!DB.nodes[DB.root]){DB.nodes[DB.root]={id:DB.root,type:'folder',name:'My Board',parent:null,kids:[],t:ts()};DB.pos[DB.root]={};saveDB();}
   DB.current=DB.root;
   if(!(nod(DB.root).kids||[]).length){
-    var n1=uid();DB.nodes[n1]={id:n1,type:'note',name:'Welcome to Clipspace ✦',parent:DB.root,text:'Your infinite canvas.\n\n→ Scroll / pinch to zoom\n→ Space + drag to pan\n→ Double-click empty space = new note\n→ Drag any card anywhere\n→ Grab corner handle to resize\n→ Right-click for options\n→ Click folder to go inside, use Back ← to return\n→ ⊞ Templates for quick starts\n→ Export/Import to save your board',t:ts()};
+    var n1=uid();DB.nodes[n1]={id:n1,type:'note',name:'Welcome to Clyppad made by Sivario.b',parent:DB.root,text:'Your infinite canvas.\n\n→ Scroll / pinch to zoom\n→ Space + drag to pan\n→ Double-click empty space = new note\n→ Drag any card anywhere\n→ Grab corner handle to resize\n→ Right-click for options\n→ Click folder to go inside, use Back ← to return\n→ ⊞ Templates for quick starts\n→ Export/Import to save your board',t:ts()};
     nod(DB.root).kids.push(n1);setPos(DB.root,n1,-240,-100,null,null);
 
     var s1=uid();DB.nodes[s1]={id:s1,type:'sticky',name:'sticky',text:'Drag me anywhere!',color:'#ffd060',parent:DB.root,t:ts()};
