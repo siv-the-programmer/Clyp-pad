@@ -152,21 +152,6 @@ State persistence uses JSON serialization into localStorage with versioned schem
 
 ---
 
-## Why Clyppad Exists
-
-Clipspace explores how far a fully static browser application can go without infrastructure.
-
-Removing the backend forces:
-
-- Clear state modeling
-- Deterministic rendering
-- Explicit persistence logic
-- Zero hidden services
-
-It is an experiment in simplicity and constraint-driven architecture.
-
----
-
 ## Roadmap
 
 Active development continues.
