@@ -1,4 +1,6 @@
-# Clyppad v1.2
+# Clyppad 
+
+<img src="pic1.jpg" width="400" alt="addpol">
 
 Clyppad is a local-first infinite canvas for notes, folders, shapes, and visual organization.
 
