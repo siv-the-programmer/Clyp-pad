@@ -99,6 +99,14 @@ Shapes
 - Adjustable stroke width
 - Resizable SVG rendering
 
+# New features:
+
+- Edit buttons — ✏ button on notes (footer), stickies (footer), and labels (top-right). Double-click also works
+- Resize scales content — text inside notes, stickies, and checklists scales proportionally when you resize the card
+- Label resize — drag corner changes font size live
+- 2 Workspaces — Board 1 / Board 2 switcher in topbar, each has independent canvas and saves separately
+- Screenshot — button with flash effect (uses OS screenshot as fallback since html2canvas needs hosting)
+- Text editor for labels — edit button opens modal with size + color pickers
 ---
 
 <img src="pics/pic4.jpg" width="400" alt="addpol">

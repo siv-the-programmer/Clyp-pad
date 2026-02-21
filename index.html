@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>ClypPad</title>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='8' fill='%230b0b0e'/><rect x='5' y='5' width='22' height='22' rx='5' fill='none' stroke='%234f8fff' stroke-width='2'/><circle cx='16' cy='16' r='4' fill='%234f8fff'/><line x1='16' y1='5' x2='16' y2='9' stroke='%234f8fff' stroke-width='2' stroke-linecap='round'/><line x1='16' y1='23' x2='16' y2='27' stroke='%234f8fff' stroke-width='2' stroke-linecap='round'/><line x1='5' y1='16' x2='9' y2='16' stroke='%234f8fff' stroke-width='2' stroke-linecap='round'/><line x1='23' y1='16' x2='27' y2='16' stroke='%234f8fff' stroke-width='2' stroke-linecap='round'/></svg>">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<!-- TOPBAR -->
+<div id="topbar">
+  <div class="logo">Clyp<em>Pad</em></div>
+  <button id="back-btn">← Back</button>
+  <div id="bc"></div>
+  <div class="top-right">
+    <div id="ws-bar">
+      <button class="ws-btn active" data-ws="0">Board 1</button>
+      <button class="ws-btn" data-ws="1">Board 2</button>
+    </div>
+    <button class="top-btn" id="imp-btn">⬆ Import</button>
+    <button class="top-btn" id="exp-btn">⬇ Export</button>
+    
+    <div id="zoom-lbl">100%</div>
+  </div>
+</div>
+
+<!-- STAGE -->
+<div id="stage">
+  <canvas id="grid-cvs"></canvas>
+  <div id="world"></div>
+</div>
+
+<!-- TOOLBAR -->
+<div id="toolbar">
+  <button class="tb accent" id="tb-note">＋ Note</button>
+  <button class="tb" id="tb-folder">📁 Folder</button>
+  <button class="tb" id="tb-label">✏ Label</button>
+  <button class="tb" id="tb-sticky">📌 Sticky</button>
+  <button class="tb" id="tb-shapes">⬡ Shapes</button>
+  <div class="tb-sep"></div>
+  <button class="tb" id="tb-image">🖼 Image</button>
+  <button class="tb" id="tb-video">🎬 Video</button>
+  <button class="tb" id="tb-voice">🎙 Voice</button>
+  <div class="tb-sep"></div>
+  <button class="tb" id="tb-tpl">⊞ Templates</button>
+  <div class="tb-sep"></div>
+  <button class="tb" id="tb-zi">＋</button>
+  <button class="tb" id="tb-zo">－</button>
+  <button class="tb" id="tb-fit">⊡</button>
+  <div class="tb-sep"></div>
+  <button class="tb" id="tb-del" style="color:var(--red)">🗑 Delete</button>
+</div>
+
+<!-- TEMPLATES PANEL -->
+<div id="tpl-panel">
+  <div class="tpl-hd">Templates</div>
+  <div class="tpl-list" id="tpl-list"></div>
+</div>
+
+<!-- NOTE EDITOR -->
+<div class="mbg" id="ed-bg">
+  <div class="mbox" id="ed-modal">
+    <div class="mhd">
+      <div id="ed-dot"></div>
+      <input id="ed-nm" type="text" placeholder="Untitled note" spellcheck="false">
+      <span id="ed-stat"></span>
+      <button class="mcl" id="ed-cl">✕</button>
+    </div>
+    <div class="mbd" style="padding:0;flex:1;min-height:0;display:flex;flex-direction:column">
+      <textarea id="ed-ta" placeholder="Start writing…" spellcheck="false"></textarea>
+    </div>
+  </div>
+</div>
+
+<!-- TEXT EDITOR (sticky/label) -->
+<div class="mbg" id="txt-bg">
+  <div class="mbox" style="max-width:400px">
+    <div class="mhd"><div class="mhd-title" id="txt-title">Edit</div><button class="mcl" id="txt-cl">✕</button></div>
+    <div class="mbd">
+      <div><label class="mlbl">Text</label><textarea class="mta" id="txt-inp" rows="4"></textarea></div>
+      <div id="txt-extra"></div>
+    </div>
+    <div class="mft"><button class="btn" id="txt-cancel">Cancel</button><button class="btn blue" id="txt-ok">Save</button></div>
+  </div>
+</div>
+
+<!-- RENAME -->
+<div class="mbg" id="rn-bg">
+  <div class="mbox" style="max-width:340px">
+    <div class="mhd"><div class="mhd-title" id="rn-title">Rename</div><button class="mcl" id="rn-cl">✕</button></div>
+    <div class="mbd"><label class="mlbl">Name</label><input class="minput" id="rn-inp" type="text" autocomplete="off"></div>
+    <div class="mft"><button class="btn" id="rn-cancel">Cancel</button><button class="btn blue" id="rn-ok">Rename</button></div>
+  </div>
+</div>
+
+<!-- LABEL CREATE -->
+<div class="mbg" id="lbl-bg">
+  <div class="mbox" style="max-width:380px">
+    <div class="mhd"><div class="mhd-title">Add Label</div><button class="mcl" id="lbl-cl">✕</button></div>
+    <div class="mbd">
+      <div><label class="mlbl">Text</label><input class="minput" id="lbl-inp" type="text" placeholder="Type a label…"></div>
+      <div class="mrow2">
+        <div><label class="mlbl">Size</label>
+          <select class="msel" id="lbl-size"><option value="13">Small</option><option value="20" selected>Medium</option><option value="32">Large</option><option value="52">Huge</option></select>
+        </div>
+        <div><label class="mlbl">Color</label>
+          <select class="msel" id="lbl-color">
+            <option value="#eaeaf0">White</option><option value="#4f8fff">Blue</option>
+            <option value="#2fd17a">Green</option><option value="#ffd060">Yellow</option>
+            <option value="#9b6fff">Purple</option><option value="#ff6eb4">Pink</option><option value="#f05858">Red</option>
+          </select>
+        </div>
+      </div>
+    </div>
+    <div class="mft"><button class="btn" id="lbl-cancel">Cancel</button><button class="btn blue" id="lbl-ok">Add Label</button></div>
+  </div>
+</div>
+
+<!-- STICKY CREATE -->
+<div class="mbg" id="sty-bg">
+  <div class="mbox" style="max-width:380px">
+    <div class="mhd"><div class="mhd-title">Sticky Note</div><button class="mcl" id="sty-cl">✕</button></div>
+    <div class="mbd">
+      <div><label class="mlbl">Text</label><textarea class="mta" id="sty-inp" placeholder="Write your sticky note…" rows="4"></textarea></div>
+      <div><label class="mlbl">Color</label>
+        <div class="sw-row" id="sty-swatches">
+          <div class="sw on" data-c="#ffd060" style="background:#ffd060"></div>
+          <div class="sw" data-c="#a8f0c6" style="background:#a8f0c6"></div>
+          <div class="sw" data-c="#ffa8d5" style="background:#ffa8d5"></div>
+          <div class="sw" data-c="#a8ccff" style="background:#a8ccff"></div>
+          <div class="sw" data-c="#d4a8ff" style="background:#d4a8ff"></div>
+          <div class="sw" data-c="#ffc8a8" style="background:#ffc8a8"></div>
+        </div>
+      </div>
+    </div>
+    <div class="mft"><button class="btn" id="sty-cancel">Cancel</button><button class="btn blue" id="sty-ok">Add</button></div>
+  </div>
+</div>
+
+<!-- SHAPE MODAL -->
+<div class="mbg" id="shp-bg">
+  <div class="mbox" style="max-width:420px">
+    <div class="mhd"><div class="mhd-title">Add Shape</div><button class="mcl" id="shp-cl">✕</button></div>
+    <div class="mbd">
+      <div><label class="mlbl">Shape</label><div id="shp-grid"></div></div>
+      <div class="mrow2">
+        <div><label class="mlbl">Fill</label><div class="sw-row" id="shp-fill"></div></div>
+        <div><label class="mlbl">Stroke</label><div class="sw-row" id="shp-stroke"></div></div>
+      </div>
+      <div class="mrow2">
+        <div><label class="mlbl">Stroke width</label>
+          <select class="msel" id="shp-sw"><option value="1.5">Thin</option><option value="2.5" selected>Normal</option><option value="4">Thick</option><option value="6">Heavy</option></select>
+        </div>
+        <div><label class="mlbl">Size</label>
+          <select class="msel" id="shp-sz"><option value="80">Small</option><option value="120" selected>Medium</option><option value="200">Large</option><option value="300">Huge</option></select>
+        </div>
+      </div>
+    </div>
+    <div class="mft"><button class="btn" id="shp-cancel">Cancel</button><button class="btn blue" id="shp-ok">Add Shape</button></div>
+  </div>
+</div>
+
+<!-- IMAGE/VIDEO MODAL -->
+<div class="mbg" id="media-bg">
+  <div class="mbox" style="max-width:460px">
+    <div class="mhd"><div class="mhd-title" id="media-title">Add Image</div><button class="mcl" id="media-cl">✕</button></div>
+    <div class="mbd">
+      <div id="media-drop">
+        <div style="font-size:36px" id="media-drop-icon">🖼</div>
+        <div style="font-size:13px;color:var(--sub);margin-top:8px" id="media-drop-txt">Click to choose or drag here</div>
+      </div>
+      <div id="media-preview-wrap" style="display:none">
+        <img id="img-preview" style="max-width:100%;max-height:220px;border-radius:10px;display:none">
+        <video id="vid-preview" style="max-width:100%;max-height:220px;border-radius:10px;display:none" controls></video>
+      </div>
+      <div><label class="mlbl">Caption (optional)</label><input class="minput" id="media-caption" type="text" placeholder="Add a caption…"></div>
+    </div>
+    <div class="mft"><button class="btn" id="media-cancel">Cancel</button><button class="btn blue" id="media-ok">Add to canvas</button></div>
+  </div>
+</div>
+
+<!-- VOICE MODAL -->
+<div class="mbg" id="voice-bg">
+  <div class="mbox" style="max-width:360px">
+    <div class="mhd"><div class="mhd-title">Voice Note</div><button class="mcl" id="voice-cl">✕</button></div>
+    <div class="mbd">
+      <div style="display:flex;align-items:center;gap:14px">
+        <div id="rec-dot"></div>
+        <div>
+          <div id="rec-time">0:00</div>
+          <div id="rec-hint">Press Record to start</div>
+        </div>
+      </div>
+      <div id="waveform"></div>
+      <div style="display:flex;gap:8px">
+        <button class="btn" id="rec-btn" style="flex:1;color:var(--red)">🎙 Record</button>
+        <button class="btn blue" id="rec-add" style="flex:1" disabled>Add to canvas</button>
+      </div>
+      <audio id="rec-preview" controls style="width:100%;display:none;border-radius:8px"></audio>
+    </div>
+  </div>
+</div>
+
+<!-- CONTEXT MENU -->
+<div id="ctx">
+  <div class="ctx-row" id="ctx-open">📂 Open folder</div>
+  <div class="ctx-row" id="ctx-edit">✏️ Edit</div>
+  <div class="ctx-row" id="ctx-rename">🔤 Rename</div>
+  <div class="ctx-row" id="ctx-copy">📋 Copy text</div>
+  <div class="ctx-row" id="ctx-dup">⧉ Duplicate</div>
+  <div class="ctx-row" id="ctx-color">🎨 Change color</div>
+  <div class="ctx-sep"></div>
+  <div class="ctx-row red" id="ctx-del">🗑 Delete</div>
+</div>
+
+<!-- COLOR PICKER -->
+<div id="cpick"><div class="sw-row"></div></div>
+
+<!-- HIDDEN INPUTS -->
+<input type="file" id="imp-file" accept=".json" style="display:none">
+<input type="file" id="img-file" accept="image/*,video/*" style="display:none">
+
+
+
+
+<!-- TOAST -->
+<div id="toast"></div>
+
+<script src="script.js"></script>
+</body>
+</html>
