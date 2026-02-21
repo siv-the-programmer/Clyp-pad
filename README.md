@@ -34,7 +34,7 @@ There is no cloud sync and no server dependency.
 
 ### Canvas System
 
-<img src="pics/pic2.jpg" width="400" alt="addpol">
+<img src="pics/pic3.jpg" width="400" alt="addpol">
 
 - Smooth pan and zoom (7% – 2000%)
 - Zoom-to-cursor behavior
@@ -49,7 +49,7 @@ There is no cloud sync and no server dependency.
 - Back button navigation
 - Independent layout per folder
 
-<img src="pics/pic3.jpg" width="400" alt="addpol">
+<img src="pics/pic2.jpg" width="400" alt="addpol">
 
 ### Content Types
 
