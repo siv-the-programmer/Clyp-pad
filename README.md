@@ -34,7 +34,7 @@ There is no cloud sync and no server dependency.
 
 ### Canvas System
 
-<img src="pics/pic2.jpg" width="400" alt="addpol">
+<img src="pics/pic3.jpg" width="400" alt="addpol">
 
 - Smooth pan and zoom (7% – 2000%)
 - Zoom-to-cursor behavior
@@ -48,6 +48,8 @@ There is no cloud sync and no server dependency.
 - Breadcrumb navigation
 - Back button navigation
 - Independent layout per folder
+
+<img src="pics/pic2.jpg" width="400" alt="addpol">
 
 ### Content Types
 
@@ -99,6 +101,8 @@ Shapes
 
 ---
 
+<img src="pics/pic4.jpg" width="400" alt="addpol">
+
 ## Interaction System
 
 - Drag and drop positioning
@@ -112,6 +116,9 @@ Shapes
 - Open folder
 
 ---
+
+<img src="pics/pic5.jpg" width="400" alt="addpol">
+
 
 ## Data Model
 
