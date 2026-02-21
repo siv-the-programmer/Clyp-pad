@@ -34,6 +34,8 @@ There is no cloud sync and no server dependency.
 
 ### Canvas System
 
+<img src="pic2.jpg" width="400" alt="addpol">
+
 - Smooth pan and zoom (7% – 2000%)
 - Zoom-to-cursor behavior
 - Fit-to-content view
