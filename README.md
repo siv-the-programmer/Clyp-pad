@@ -2,7 +2,7 @@
 
 <img src="pics/pic1.jpg" width="400" alt="addpol">
 
-Clyppad is a local-first infinite canvas for notes, folders, shapes, and visual organization.
+Clyppad is an infinite canvas for notes, folders, shapes, and visual organization.
 
 It runs entirely in the browser as a static web application.
 No backend. No authentication. No external database.
