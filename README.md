@@ -1,5 +1,7 @@
 # Clyppad 
 
+## A work in progress
+
 <img src="pics/pic1.jpg" width="400" alt="addpol">
 
 Clyppad is an infinite canvas for notes, folders, shapes, and visual organization.
