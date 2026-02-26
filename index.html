@@ -1813,7 +1813,7 @@ function seed(b){
   if((b.nodes[b.root].kids||[]).length>0)return;
   var p=b.pos[b.root];if(!p)p=b.pos[b.root]={};
   var l=uid();b.nodes[l]={id:l,type:'label',name:b.name,sz:44,color:'#4f8fff',parent:b.root,t:now()};b.nodes[b.root].kids.push(l);p[l]={x:-230,y:-220};
-  var n=uid();b.nodes[n]={id:n,type:'note',name:'Welcome to ClypPad',body:'Your infinite canvas — clean, fast, bug-free.\n\n→ Click any card to edit\n→ Double-click empty space for a new note\n→ Right-click any card for options\n→ Space + drag to pan\n→ Pinch or Ctrl+scroll to zoom\n→ Drag corner ↘ to resize\n→ Ctrl+Z / Ctrl+Shift+Z to undo/redo',parent:b.root,t:now()};b.nodes[b.root].kids.push(n);p[n]={x:-230,y:-130};
+  var n=uid();b.nodes[n]={id:n,type:'note',name:'Welcome to ClypPad',body:'Created by Sivario.B \n\n→ Click any card to edit\n→ Double-click empty space for a new note\n→ Right-click any card for options\n→ Space + drag to pan\n→ Pinch or Ctrl+scroll to zoom\n→ Drag corner ↘ to resize\n→ Ctrl+Z / Ctrl+Shift+Z to undo/redo',parent:b.root,t:now()};b.nodes[b.root].kids.push(n);p[n]={x:-230,y:-130};
   var s=uid();b.nodes[s]={id:s,type:'sticky',name:'sticky',body:'Right-click me for options!',color:'#ffd060',parent:b.root,t:now()};b.nodes[b.root].kids.push(s);p[s]={x:80,y:-220};
   var c=uid();b.nodes[c]={id:c,type:'checklist',name:'Get started',items:[{t:'Create a note',done:false},{t:'Try a sticky',done:false},{t:'Add a shape',done:false},{t:'Make a folder',done:false}],parent:b.root,t:now()};b.nodes[b.root].kids.push(c);p[c]={x:80,y:-130};
 }
