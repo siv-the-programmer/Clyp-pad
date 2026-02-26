@@ -967,20 +967,47 @@ function buildCard(n,p){
   else if(n.type==='voice'){
     el.className='card cvoc';
     var bars='';for(var bi=0;bi<18;bi++)bars+='<span style="height:'+(Math.random()*18+4).toFixed(0)+'px;opacity:'+(Math.random()*.5+.15).toFixed(2)+'"></span>';
+    var nid=n.id;
     el.innerHTML='<div class="cvoc-row"><div class="cvoc-icon"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><rect x="5.5" y="1" width="5" height="8" rx="2.5" stroke="#9b6fff" stroke-width="1.4"/><path d="M2.5 8.5a5.5 5.5 0 0011 0" stroke="#9b6fff" stroke-width="1.4" stroke-linecap="round"/><path d="M8 14v2" stroke="#9b6fff" stroke-width="1.4" stroke-linecap="round"/></svg></div><div><div class="cvoc-name">'+esc(n.name)+'</div><div class="cvoc-dur">'+esc(n.dur||'0:00')+'</div></div></div>'
       +'<div class="cvoc-bars">'+bars+'</div>'
-      +'<div style="display:flex;align-items:center;gap:8px"><button class="cvoc-play" data-vid="'+n.id+'"><svg width="10" height="10" viewBox="0 0 10 10" fill="currentColor"><path d="M2.5 1.5l7 3.5-7 3.5z"/></svg></button><span style="font:400 11px var(--m);color:var(--dim)" id="vt-'+n.id+'">'+esc(n.dur||'0:00')+'</span></div>'+RH;
-    el.querySelector('.cvoc-play').onclick=function(e){
+      +'<div style="display:flex;align-items:center;gap:8px"><button class="cvoc-play" id="vp-'+nid+'"><svg class="vp-icon-play" width="10" height="10" viewBox="0 0 10 10" fill="currentColor"><path d="M2.5 1.5l7 3.5-7 3.5z"/></svg><svg class="vp-icon-pause" width="10" height="10" viewBox="0 0 10 10" fill="currentColor" style="display:none"><rect x="2" y="1.5" width="2.2" height="7" rx="1"/><rect x="5.8" y="1.5" width="2.2" height="7" rx="1"/></svg></button><span style="font:400 11px var(--m);color:var(--dim)" id="vt-'+nid+'">'+esc(n.dur||'0:00')+'</span></div>'+RH;
+
+    var playBtn=el.querySelector('.cvoc-play');
+    playBtn.addEventListener('pointerdown',function(e){e.stopPropagation();});
+    playBtn.addEventListener('click',function(e){
       e.stopPropagation();
-      var nid=n.id;
+      // get or create audio
       if(!_auds[nid]){
-        _auds[nid]=new Audio(n.src);
-        _auds[nid].ontimeupdate=function(){var t=$('vt-'+nid);if(t)t.textContent=dur(this.currentTime);};
-        _auds[nid].onended=function(){var t=$('vt-'+nid);if(t)t.textContent=n.dur;this._playing=false;};
+        _auds[nid]=new Audio();
+        _auds[nid].src=n.src;
+        _auds[nid]._playing=false;
+        _auds[nid].ontimeupdate=function(){
+          var t=$('vt-'+nid);
+          if(t)t.textContent=dur(this.currentTime);
+        };
+        _auds[nid].onended=function(){
+          this._playing=false;
+          var t=$('vt-'+nid);if(t)t.textContent=n.dur||'0:00';
+          var b=$('vp-'+nid);if(b){b.querySelector('.vp-icon-play').style.display='';b.querySelector('.vp-icon-pause').style.display='none';}
+        };
+        _auds[nid].onerror=function(){
+          this._playing=false;
+          toast('Could not play audio');
+        };
       }
       var a=_auds[nid];
-      if(!a._playing){a.play();a._playing=true;}else{a.pause();a._playing=false;}
-    };
+      if(!a._playing){
+        a.play().then(function(){
+          a._playing=true;
+          var b=$('vp-'+nid);if(b){b.querySelector('.vp-icon-play').style.display='none';b.querySelector('.vp-icon-pause').style.display='';}
+        }).catch(function(err){
+          toast('Tap to play (autoplay blocked)');
+        });
+      }else{
+        a.pause();a._playing=false;
+        var b=$('vp-'+nid);if(b){b.querySelector('.vp-icon-play').style.display='';b.querySelector('.vp-icon-pause').style.display='none';}
+      }
+    });
   }
 
   else if(n.type==='shape'){
@@ -1490,7 +1517,7 @@ $('mdr-ok').onclick=function(){
 // ─────────────────────────────────────────────
 // VOICE MODAL
 // ─────────────────────────────────────────────
-var mrec=null,recChunks=[],recBlob=null,recSecs=0,recTick=null,recWave=null;
+var mrec=null,recChunks=[],recBlob=null,recSecs=0,recTick=null,recWave=null,recMime='audio/webm';
 (function(){
   var wf=$('waveform');
   for(var i=0;i<30;i++){var b=document.createElement('span');b.style.cssText='height:3px;width:2.5px;border-radius:2px;background:var(--pur);opacity:.15;display:block;flex-shrink:0;transition:height .08s,opacity .08s';wf.appendChild(b);}
@@ -1499,13 +1526,19 @@ function startRec(){
   navigator.mediaDevices&&navigator.mediaDevices.getUserMedia({audio:true}).then(function(stream){
     recChunks=[];recBlob=null;
     $('rec-audio').style.display='none';$('rec-add').disabled=true;
-    mrec=new MediaRecorder(stream);
+    // Pick best supported codec
+    var mime='audio/webm';
+    var tries=['audio/mp4','audio/webm;codecs=opus','audio/webm','audio/ogg;codecs=opus','audio/ogg'];
+    for(var ti=0;ti<tries.length;ti++){if(MediaRecorder.isTypeSupported(tries[ti])){mime=tries[ti];break;}}
+    recMime=mime;
+    mrec=new MediaRecorder(stream,{mimeType:mime});
     mrec.ondataavailable=function(e){if(e.data.size>0)recChunks.push(e.data);};
     mrec.onstop=function(){
-      recBlob=new Blob(recChunks,{type:'audio/webm'});
-      $('rec-audio').src=URL.createObjectURL(recBlob);
+      recBlob=new Blob(recChunks,{type:recMime});
+      var url=URL.createObjectURL(recBlob);
+      $('rec-audio').src=url;
       $('rec-audio').style.display='block';$('rec-add').disabled=false;
-      $('rec-btn').textContent='Record again';$('rec-hint').textContent='Listen, then add';
+      $('rec-btn').textContent='Record again';$('rec-hint').textContent='Preview below, then add to canvas';
       $('rec-dot').className='';clearInterval(recTick);clearInterval(recWave);
       $('waveform').querySelectorAll('span').forEach(function(b){b.style.height='3px';b.style.opacity='.15';});
       stream.getTracks().forEach(function(t){t.stop();});
@@ -1515,7 +1548,7 @@ function startRec(){
     $('rec-btn').textContent='Stop';
     recTick=setInterval(function(){recSecs++;$('rec-time').textContent=dur(recSecs);},1000);
     recWave=setInterval(function(){$('waveform').querySelectorAll('span').forEach(function(b){var h=Math.random()*34+3;b.style.height=h+'px';b.style.opacity=((h/37)*.6+.1).toFixed(2);});},90);
-  }).catch(function(){toast('Microphone not available');});
+  }).catch(function(err){toast('Microphone not available: '+err.message);});
 }
 function stopRec(){if(mrec&&mrec.state==='recording'){mrec.stop();clearInterval(recTick);clearInterval(recWave);}}
 $('rec-btn').onclick=function(){if(mrec&&mrec.state==='recording')stopRec();else startRec();};
@@ -1524,16 +1557,20 @@ $('rec-add').onclick=function(){
   var reader=new FileReader();
   reader.onload=function(ev){
     var id=uid(),d=centerDrop(215,110);
-    B().nodes[id]={id:id,type:'voice',name:'Voice note',src:ev.target.result,dur:dur(recSecs),parent:B().cur,t:now()};
+    snap();
+    B().nodes[id]={id:id,type:'voice',name:'Voice note',src:ev.target.result,mime:recMime,dur:dur(recSecs),parent:B().cur,t:now()};
     N(B().cur).kids.push(id);
     if(!B().pos[B().cur])B().pos[B().cur]={};
     B().pos[B().cur][id]={x:d.x,y:d.y,w:null,h:null};
-    snap();saveST();renderAll();setSel(id);
+    saveST();renderAll();setSel(id);
     closeModal('mvoc');
+    // Reset recorder UI
     $('rec-btn').textContent='Record';$('rec-hint').textContent='Press Record to start';
-    $('rec-time').textContent='0:00';$('rec-audio').style.display='none';
+    $('rec-time').textContent='0:00';
+    var au=$('rec-audio');URL.revokeObjectURL(au.src);au.src='';au.style.display='none';
     $('rec-add').disabled=true;$('rec-dot').className='';
-    $('waveform').querySelectorAll('span').forEach(function(b){b.style.height='3px';});
+    $('waveform').querySelectorAll('span').forEach(function(b){b.style.height='3px';b.style.opacity='.15';});
+    recBlob=null;recChunks=[];
     toast('Voice note added!');
   };
   reader.readAsDataURL(recBlob);
